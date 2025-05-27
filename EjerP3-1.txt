@@ -1,0 +1,111 @@
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 77158482
+Server version: 8.0.40 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use yuki060317$default;
+Database changed
+mysql> CREATE TABLE SampleData ( IntegerValue INTEGER PRIMARY KEY );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO SampleData VALUES (3759),(3760),(3761),(3762),(3763);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> desc table SampleData;
++----+-------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+| id | select_type | table      | partitions | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra       |
++----+-------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | SampleData | NULL       | index | NULL          | PRIMARY | 4       | NULL |    5 |   100.00 | Using index |
++----+-------------+------------+------------+-------+---------------+---------+---------+------+------+----------+-------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> SELECT (IntegerValue) 
+    -> 
+    -> FROM SampleData 
+    -> 
+    -> WHERE IntegerValue < (SELECT MAX(IntegerValue) FROM SampleData);
+ERROR 4031 (HY000): The client was disconnected by the server because of inactivity. See wait_timeout and interactive_timeout for configuring this behavior.
+No connection. Trying to reconnect...
+Connection id:    77908819
+Current database: yuki060317$default
+
++--------------+
+| IntegerValue |
++--------------+
+|         3759 |
+|         3760 |
+|         3761 |
+|         3762 |
++--------------+
+4 rows in set (8.96 sec)
+
+mysql> 
+mysql> SELECT MAX(IntegerValue) 
+    -> 
+    -> FROM SampleData 
+    -> 
+    -> WHERE IntegerValue < (SELECT MAX(IntegerValue) FROM SampleData);
++-------------------+
+| MAX(IntegerValue) |
++-------------------+
+|              3762 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> CREATE TABLE SampleData (
+    -> 
+    -> IntegerValue INTEGER PRIMARY KEY
+    -> 
+    -> );
+ERROR 1050 (42S01): Table 'SampleData' already exists
+mysql> 
+mysql> CREATE TABLE Employees (
+    -> 
+    -> Name VARCHAR(100),
+    -> 
+    -> Salary INTEGER
+    -> 
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+mysql> INSERT INTO Employees 
+    -> 
+    -> VALUES 
+    -> 
+    -> ('Ayumi Arenas', 250000),
+    -> 
+    -> ('Saul Hernandez', 250000),
+    -> 
+    -> ('Alan Luna', 150000),
+    -> 
+    -> ('Victor Sanchez', 150000),
+    -> 
+    -> ('Jose Solis', 100000),
+    -> 
+    -> ('Keysha Garcia', 100000);
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+mysql> 
+mysql> SELECT MAX(Salary) 
+    -> 
+    -> FROM Employees 
+    -> 
+    -> WHERE Salary < (SELECT MAX(Salary) FROM Employees);
++-------------+
+| MAX(Salary) |
++-------------+
+|      150000 |
++-------------+
+1 row in set (0.00 sec)
